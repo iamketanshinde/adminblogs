@@ -1,23 +1,30 @@
 const Router = require('express');
 
 const router = Router();
-const Admin = require("../models/admin")
+const User = require("../models/admin")
+
+router.get("/", (req, res) => {
+    return res.render("signup");  
+});
 
 router.get("/signin",(req,res)=>{
-    return res.render("signin");
+    return res.render("signin"); 
 })
-router.get("/admin",(req,res)=>{
+router.get("/signup",(req,res)=>{
     return res.render("signup");
 })
 
-router.post("/signup", async(req,res)=>{
+router.post("/", async(req,res)=>{
     const {fullname, email, password} = req.body;
-    await Admin.create({
-        fullname,
-        email,
-        password,
-    });
-    return res.redirect("/")
+    try {
+        await User.create({ fullname, email, password });
+        return res.render("dashboard"); 
+    } catch (err) {
+        console.error("Signup error:", err.message);
+        return res.status(500).send("Error during signup");
+    }
+    
 })
+
 
 module.exports = router;

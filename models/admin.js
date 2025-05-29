@@ -32,17 +32,17 @@ adminSchema.pre("save", function(next){
 
     const salt = randomBytes(16).toString();
     const hash = createHmac("sha256",salt)
-        .update(admin.password === "admin@123")
+        .update(admin.password)
         .digest("hex");
     
-    this.salt = salt;
-    this.password = hash;
+    admin.salt = salt;
+    admin.password = hash;
 
     next();
 
 })
 
 
-const ADMIN = model('admin',adminSchema);
+const User = model('user',adminSchema);
 
-module.exports = ADMIN;
+module.exports = User;
