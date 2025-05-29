@@ -18,7 +18,7 @@ router.post("/", async(req,res)=>{
     const {fullname, email, password} = req.body;
     try {
         await User.create({ fullname, email, password });
-        return res.render("dashboard"); 
+        return res.redirect("/dashboard"); 
     } catch (err) {
         console.error("Signup error:", err.message);
         return res.status(500).send("Error during signup");
