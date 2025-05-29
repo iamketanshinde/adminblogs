@@ -42,6 +42,19 @@ adminSchema.pre("save", function(next){
 
 })
 
+adminSchema.static("matchedhash", function (email, password){
+    const admin = this.findOne({email});
+    if(!admin) return false;
+
+    const salt = admin.salt;
+    const hash = admin.password;
+
+    const adminHashPass = createHmac("sha256",salt)
+        .update(password)
+        .digest("hex");
+
+    return hash === adminHashPass;
+})
 
 const User = model('user',adminSchema);
 
