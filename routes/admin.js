@@ -10,6 +10,7 @@ router.get("/signin",(req,res)=>{
 
 router.post("/signin",(req, res)=>{
     const {email, password} = req.body;
+    User.matchedhash(email, password);
 })
 
 router.get("/", (req, res) => {
