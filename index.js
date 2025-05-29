@@ -23,7 +23,7 @@ app.get("/dashboard",(req,res) => {
     res.render("dashboard")
 })
 
-app.use("/admin",adminroute)
+app.use("/admin/signup",adminroute)
 
 
 app.listen(PORT,()=>console.log(`Server Running On :- ${PORT} !!.`));

@@ -3,25 +3,27 @@ const Router = require('express');
 const router = Router();
 const User = require("../models/admin")
 
-router.get("/signin",(req,res)=>{
+router.get("/",(req,res)=>{
     return res.render("signin"); 
 })
 
 
-router.post("/signin",(req, res)=>{
+router.post("/",(req, res)=>{
     const {email, password} = req.body;
-    User.matchedhash(email, password);
+    const user = User.matchedhash(email, password);
+    console.log("user", user);
+    return res.redirect("/dashboard")
 })
 
-router.get("/", (req, res) => {
+router.get("/signup", (req, res) => {
     return res.render("signup");  
 });  
 
-router.post("/", async(req,res)=>{
+router.post("/signup", async(req,res)=>{
     const {fullname, email, password} = req.body;
     try {
         await User.create({ fullname, email, password });
-        return res.redirect("/dashboard"); 
+        return res.redirect("/"); 
     } catch (err) {
         console.error("Signup error:", err.message);
         return res.status(500).send("Error during signup");
