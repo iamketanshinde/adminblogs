@@ -42,8 +42,8 @@ adminSchema.pre("save", function(next){
 
 })
 
-adminSchema.static("matchedhash", function (email, password){
-    const admin = this.findOne({email});
+adminSchema.static("matchedhash",async function (email, password){
+    const admin =await this.findOne({email});
     if(!admin) throw new Error("User not found");
 
     const salt = admin.salt;
@@ -55,7 +55,7 @@ adminSchema.static("matchedhash", function (email, password){
 
     if(hash !== adminHashPass) throw new Error("password is incorrect!")
 
-    return {...user, password:undefined, salt:undefined};
+    return { password: undefined, salt:undefined};
 })
 
 const User = model('user',adminSchema);

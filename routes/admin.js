@@ -1,5 +1,6 @@
 const Router = require('express');
 
+
 const router = Router();
 const User = require("../models/admin")
 
@@ -12,7 +13,7 @@ router.post("/",(req, res)=>{
     const {email, password} = req.body;
     const user = User.matchedhash(email, password);
     console.log("user", user);
-    return res.redirect("/dashboard")
+    return res.redirect("admin/dashboard")
 })
 
 router.get("/signup", (req, res) => {

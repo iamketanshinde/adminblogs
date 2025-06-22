@@ -19,11 +19,11 @@ app.get("/", (req, res) => {
     res.render("home.ejs");
 });
 
-app.get("/dashboard",(req,res) => {
+app.get("/admin/dashboard",(req,res) => {
     res.render("dashboard")
 })
 
-app.use("/admin/signup",adminroute)
+app.use("/admin/",adminroute)
 
 
 app.listen(PORT,()=>console.log(`Server Running On :- ${PORT} !!.`));
