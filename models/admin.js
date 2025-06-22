@@ -55,7 +55,7 @@ adminSchema.static("matchedhash",async function (email, password){
 
     if(hash !== adminHashPass) throw new Error("password is incorrect!")
 
-    return { password: undefined, salt:undefined};
+    return {...user, password: undefined, salt:undefined};
 })
 
 const User = model('user',adminSchema);

@@ -24,12 +24,11 @@ router.post("/signup", async(req,res)=>{
     const {fullname, email, password} = req.body;
     try {
         await User.create({ fullname, email, password });
-        return res.redirect("/"); 
     } catch (err) {
         console.error("Signup error:", err.message);
         return res.status(500).send("Error during signup");
     }
-    
+    return res.redirect("/admin"); 
 })
 
 
