@@ -43,7 +43,7 @@ adminSchema.pre("save", function(next){
 })
 
 adminSchema.static("matchedhash",async function (email, password){
-    const admin =await this.findOne({email});
+    const admin = await this.findOne({email});
     if(!admin) throw new Error("User not found");
 
     const salt = admin.salt;
