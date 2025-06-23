@@ -28,7 +28,7 @@ const adminSchema= new Schema({
 
 adminSchema.pre("save", function(next){
     const admin = this;
-    if(!admin.isModified("password")) return;
+    if(!admin.isModified("password")) return next();
 
     const salt = randomBytes(16).toString();
     const hash = createHmac("sha256",salt)
@@ -55,7 +55,7 @@ adminSchema.static("matchedhash",async function (email, password){
 
     if(hash !== adminHashPass) throw new Error("password is incorrect!")
 
-    return {...user, password: undefined, salt:undefined};
+    return {...admin.toObejct(), password: undefined, salt:undefined};
 })
 
 const User = model('user',adminSchema);
