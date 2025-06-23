@@ -1,18 +1,18 @@
 const Router = require('express');
 const router = Router();
 const User = require("../models/admin");
-const User = require("../models/blog");
+const Blog = require("../models/blog");
 
 router.get("/",(req,res)=>{
     return res.render("signin"); 
 })
 
 
-router.post("/",(req, res)=>{
+router.post("/",async (req, res)=>{
     const {email, password} = req.body;
-    const user = User.matchedhash(email, password);
-    console.log("user", user);
-    return res.redirect("admin/dashboard")
+    const user = await  User.matchedhash(email, password);
+    // console.log("user", user);
+    return res.redirect("/admin/dashboard")
 })
 
 router.get("/signup", (req, res) => {
@@ -35,5 +35,16 @@ router.get("/admin/dashboard/add",(req,res)=>{
     return res.render("add.ejs");
 })
 
+router.post("/dashboard/add", async (req, res) => {
+    try {
+        const { title, content, author } = req.body;
+        await Blog.create({ title, content, author });
+        console.log("form data:", req.body)
+        return res.redirect("/admin/dashboard");
+    } catch (error) {
+        console.log(`error found while creating blog ${error}`);
+        return res.status(500).send("Blog creation failed");
+    }
+});
 
 module.exports = router;

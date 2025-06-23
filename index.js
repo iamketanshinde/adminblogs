@@ -25,7 +25,7 @@ app.get("/admin/dashboard",(req,res) => {
 app.get("/admin/dashboard/add",(req,res)=>{
     res.render("add.ejs")
 })
-app.use("/admin/",adminroute)
+app.use("/admin",adminroute)
 
 
 app.listen(PORT,()=>console.log(`Server Running On :- ${PORT} !!.`));

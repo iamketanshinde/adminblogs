@@ -8,8 +8,9 @@
 </head>
 <body>
      <%-include('partials/nav.ejs') %>
-     <h1>Welcome to Admin Dashboard</h1>
-     <p>You have successfully signed up!</p>
-     <button><a href="/admin/dashboard/add">AddBlogs</a></button>
+     <div class="d-flex justify-content-between mt-3">
+        <div><h1 class="">Welcome to Admin Dashboard</h1></div>
+        <div><button class="btn-info btn"><a style="color: black;" href="/admin/dashboard/add">AddBlogs</a></button></div>
+     </div>
 </body>
 </html>
