@@ -32,4 +32,11 @@ router.post("/signup", async(req,res)=>{
 })
 
 
+router.get("/dashboard/add",(req,res)=>{
+    return res.render("add.ejs",{
+        user: req.user
+    });
+})
+
+
 module.exports = router;
