@@ -4,14 +4,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add blog</title>
+    <%-include('partials/head.ejs') %>
 </head>
 <body>
-    <h1>Add blog</h1>
+    <h1 class="mt-3 mx-4">Add blog</h1>
     <div class="container">
         <form action="/add">
-            <label for="title" class="form-label">Title</label>
-            <input type="text" class="form-control" id="title" name="title">
+            <div class="mb-3">
+                <label for="title" class="form-label">Title</label>
+                <input type="title" name="title" class="form-control" id="title" aria-describedby="title">
+            </div>
+            <div class="mb-3">
+                <label for="content" class="form-label">Content</label><br>
+                <textarea cols="50" rows="2" name="content" id="content" name="content">type something here!</textarea>
+            </div>
+            <div class="mb-3">
+                <label for="author" class="form-label">Author</label>
+                <input type="author" class="form-control" name="author" id="author">
+            </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
         </form>
+    </div>
+</body>
     </div>
 </body>
 </html>

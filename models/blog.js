@@ -6,7 +6,13 @@ const blogSchema = new Schema({
         trim:true,
         require:true,
     },
-    body:{
+    content:{
+        type:String,
+        trim:true,
+        require:true,
+    },
+    author:{
+        type:String,
         require:true,
     },
     createdBy: {

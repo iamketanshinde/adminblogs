@@ -1,8 +1,7 @@
 const Router = require('express');
-
-
 const router = Router();
-const User = require("../models/admin")
+const User = require("../models/admin");
+const User = require("../models/blog");
 
 router.get("/",(req,res)=>{
     return res.render("signin"); 
@@ -32,10 +31,8 @@ router.post("/signup", async(req,res)=>{
 })
 
 
-router.get("/dashboard/add",(req,res)=>{
-    return res.render("add.ejs",{
-        user: req.user
-    });
+router.get("/admin/dashboard/add",(req,res)=>{
+    return res.render("add.ejs");
 })
 
 

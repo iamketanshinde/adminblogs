@@ -22,7 +22,7 @@ app.get("/", (req, res) => {
 app.get("/admin/dashboard",(req,res) => {
     res.render("dashboard")
 })
-app.get("/dashboard/add",(req,res)=>{
+app.get("/admin/dashboard/add",(req,res)=>{
     res.render("add.ejs")
 })
 app.use("/admin/",adminroute)
