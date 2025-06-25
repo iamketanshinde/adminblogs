@@ -8,27 +8,44 @@
 </head>
 <body>
      <%-include('partials/nav.ejs') %>
-     <div class="d-flex justify-content-between mt-3">
-        <div><h1 class="">Welcome to Admin Dashboard</h1></div>
-        <div><button class="btn-info btn"><a style="color: black;" href="/admin/dashboard/add">AddBlogs</a></button></div>
-     </div>
-    <table class="table">
+    <div class="d-flex justify-content-between mt-3">
+    <div><h1 class="">Welcome to Admin Dashboard</h1></div>
+    <div><button class="btn-info btn"><a style="color: black;" href="/admin/dashboard/add">AddBlogs</a></button></div>
+    </div>
+     
+    <hr>
+
+    <div class="container">
+        
+    <% if (blogs && blogs.length > 0) { %>
+    <% blogs.forEach(blog => { %>
+        <table class="table">
         <thead>
             <tr>
-            <th scope="col">#</th>
+            <th scope="col">Sr.no</th>
             <th scope="col">Title</th>
             <th scope="col">Content</th>
             <th scope="col">Author</th>
+            <th scope="col">view</th>
             </tr>
         </thead>
         <tbody>
             <tr>
             <th scope="row">1</th>
-            <td>Mark</td>
-            <td>Otto</td>
-            <td>@mdo</td>
+            <td><%= blog.title %></td>
+            <td><%=  blog.content.length > 100 ? blog.content.slice(0, 80) + "..." : blog.content%></td>
+            <td><%= blog.author %></td>
+            <td><img src="https://tse3.mm.bing.net/th?id=OIP.JVnbhT3t9Xo13oxbQgwI_QHaHa&pid=Api&P=0&h=220" alt="view png" height="25px" style="margin-left: 5px;"><link rel="stylesheet" href=""></td>
             </tr>
-        </tbody>  
-    </table>
+        </tbody>
+        </table>
+    <% }); %>
+    <% } else { %>
+    <p>No blogs found.</p>
+    <% } %>
+
+    </div>
+
+
 </body>
 </html>

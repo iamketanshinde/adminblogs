@@ -19,9 +19,6 @@ app.get("/", (req, res) => {
     res.render("home.ejs");
 });
 
-app.get("/admin/dashboard",(req,res) => {
-    res.render("dashboard")
-})
 app.get("/admin/dashboard/add",(req,res)=>{
     res.render("add.ejs")
 })

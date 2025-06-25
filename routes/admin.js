@@ -31,6 +31,11 @@ router.post("/signup", async(req,res)=>{
 })
 
 
+router.get("/dashboard", async (req, res) => {
+  const blogs = await Blog.find().sort({ createdAt: -1 });
+  res.render("dashboard", { blogs });
+});
+
 router.get("/admin/dashboard/add",(req,res)=>{
     return res.render("add.ejs");
 })
@@ -46,5 +51,7 @@ router.post("/dashboard/add", async (req, res) => {
         return res.status(500).send("Blog creation failed");
     }
 });
+
+
 
 module.exports = router;
