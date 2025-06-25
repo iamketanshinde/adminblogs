@@ -36,8 +36,13 @@ router.get("/dashboard", async (req, res) => {
   res.render("dashboard", { blogs });
 });
 
+router.get("/dashboard/:id",async(req, res)=>{
+    const blog = await Blog.findById(req.params.id);
+    res.render("render.ejs",{blog});
+})
+
 router.get("/admin/dashboard/add",(req,res)=>{
-    return res.render("add.ejs");
+    res.render("add.ejs");
 })
 
 router.post("/dashboard/add", async (req, res) => {
