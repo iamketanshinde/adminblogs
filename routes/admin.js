@@ -52,6 +52,11 @@ router.post("/dashboard/update/:id",async(req, res)=>{
     res.redirect("/admin/dashboard");
 });
 
+router.post("/dashboard/delete/:id",async(req, res)=>{
+    await Blog.findByIdAndDelete(req.params.id)
+    res.redirect("/admin/dashboard");
+});
+
 
 router.get("/admin/dashboard/add",(req,res)=>{
     res.render("add.ejs");

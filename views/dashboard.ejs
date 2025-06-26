@@ -28,6 +28,7 @@
             <th scope="col">Author</th>
             <th scope="col">view</th>
             <th scope="col">update</th>
+            <th scope="col">Delete</th>
             </tr>
         </thead>
         <tbody>
@@ -37,7 +38,13 @@
                 <td><%=  blog.content.length > 100 ? blog.content.slice(0, 80) + "..." : blog.content%></td>
                 <td><%= blog.author %></td>
                 <td><a href="/admin/dashboard/<%= blog._id  %>"><img src="https://tse3.mm.bing.net/th?id=OIP.JVnbhT3t9Xo13oxbQgwI_QHaHa&pid=Api&P=0&h=220" alt="view png" height="25px" style="margin-left: 5px;"></a></td>
-                <td><a href="/admin/dashboard/update/<%= blog._id  %>"><img src="https://tse2.mm.bing.net/th?id=OIP._9--JKGbpacSeqRt8PA33QHaHa&pid=Api&P=0&h=220" alt="view png" height="25px" style="margin-left: 5px;"></a></td>
+                <td><a href="/admin/dashboard/update/<%= blog._id  %>"><img src="https://tse2.mm.bing.net/th?id=OIP._9--JKGbpacSeqRt8PA33QHaHa&pid=Api&P=0&h=220" alt="view png" height="25px" style="margin-left: 10px;"></a></td>
+                <td>
+                    <form action="/admin/dashboard/delete/<%= blog._id %>" method="POST" style="display:inline;">
+                    <button type="submit" style="border:none; background:none; padding:0;">
+                    <img src="https://tse1.mm.bing.net/th?id=OIP.k0m2i2jTSw2J89geV7CROAHaHk&pid=Api&P=0&h=220" alt="delete" height="25px" style="margin-left: 5px;">
+                    </button></form>
+                </td>
             </tr>
         </tbody>
         </table>
@@ -45,7 +52,6 @@
     <% } else { %>
     <p>No blogs found.</p>
     <% } %>
-
     </div>
 
 
