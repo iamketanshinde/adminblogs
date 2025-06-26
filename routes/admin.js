@@ -41,6 +41,9 @@ router.get("/dashboard/:id",async(req, res)=>{
     res.render("render.ejs",{blog});
 })
 
+
+
+
 router.get("/admin/dashboard/add",(req,res)=>{
     res.render("add.ejs");
 })
