@@ -40,8 +40,17 @@ router.get("/dashboard/:id",async(req, res)=>{
     const blog = await Blog.findById(req.params.id);
     res.render("render.ejs",{blog});
 })
+router.get("/dashboard/update/:id",async(req, res)=>{
+    const blog = await Blog.findById(req.params.id);
+    res.render("update",{blog});
+});
 
 
+router.post("/dashboard/update/:id",async(req, res)=>{
+    const {title,content, author} = req.body;
+    await Blog.findByIdAndUpdate(req.params.id,{title,content,author})
+    res.redirect("/admin/dashboard");
+});
 
 
 router.get("/admin/dashboard/add",(req,res)=>{
