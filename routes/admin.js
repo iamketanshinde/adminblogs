@@ -13,7 +13,7 @@ router.post("/",async (req, res)=>{
     const user = await  User.matchedhash(email, password);
     // console.log("user", user);
     return res.redirect("/admin/dashboard")
-})
+});
 
 router.get("/signup", (req, res) => {
     return res.render("signup");  
@@ -24,7 +24,6 @@ router.post("/signup", async(req,res)=>{
     try {
         await User.create({ fullname, email, password });
     } catch (err) {
-        console.error("Signup error:", err.message);
         return res.status(500).send("Error during signup");
     }
     return res.redirect("/admin"); 
@@ -70,7 +69,7 @@ router.post("/dashboard/add", async (req, res) => {
         return res.redirect("/admin/dashboard");
     } catch (error) {
         console.log(`error found while creating blog ${error}`);
-        return res.status(500).send("Blog creation failed");
+        res.redirect("/admin/dashboard");
     }
 });
 
