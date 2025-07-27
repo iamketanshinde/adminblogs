@@ -3,9 +3,6 @@ const router = Router();
 const User = require("../models/admin")
 const Blog = require("../models/blog");
 
-const blogsOnPerPage = 4;
-let serialnumber = 0;
-
 router.get("/",(req,res)=>{
     return res.render("signin"); 
 })
@@ -46,9 +43,24 @@ router.get("/dashboard", async (req, res) => {
 
     const startSerial = (page - 1) * blogsOnPerPage + 1;
 
-    res.render("dashboard", { blogs, totalPages, page, startSerial });
+    res.render("dashboard", {blogs,totalPages, page, startSerial });
 });
 
+router.get("/admin/dashboard/add",async(req,res)=>{
+    res.render("add.ejs");
+})
+
+router.post("/dashboard/add", async (req, res) => {
+    try {
+        const { title, content, author } = req.body;
+        await Blog.create({ title, content, author });
+        console.log("form data:", req.body)
+        return res.redirect("/admin/dashboard");
+    } catch (error) {
+        console.log(`error found while creating blog ${error}`);
+        res.redirect("/admin/dashboard");
+    }
+});
 
 router.get("/dashboard/:id",async(req, res)=>{
     const blog = await Blog.findById(req.params.id);
@@ -71,23 +83,6 @@ router.post("/dashboard/delete/:id",async(req, res)=>{
     res.redirect("/admin/dashboard");
 });
 
-
-router.get("/admin/dashboard/add",async(req,res)=>{
-
-    res.render("add.ejs");
-})
-
-router.post("/dashboard/add", async (req, res) => {
-    try {
-        const { title, content, author } = req.body;
-        await Blog.create({ title, content, author });
-        console.log("form data:", req.body)
-        return res.redirect("/admin/dashboard");
-    } catch (error) {
-        console.log(`error found while creating blog ${error}`);
-        res.redirect("/admin/dashboard");
-    }
-});
 
 
 module.exports = router;
