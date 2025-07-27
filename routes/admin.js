@@ -1,7 +1,10 @@
 const Router = require('express');
 const router = Router();
-const User = require("../models/admin");
+const User = require("../models/admin")
 const Blog = require("../models/blog");
+
+const blogsOnPerPage = 4;
+let serialnumber = 0;
 
 router.get("/",(req,res)=>{
     return res.render("signin"); 
@@ -10,8 +13,7 @@ router.get("/",(req,res)=>{
 
 router.post("/",async (req, res)=>{
     const {email, password} = req.body;
-    const user = await  User.matchedhash(email, password);
-    // console.log("user", user);
+    const user = await User.matchedhash(email, password);
     return res.redirect("/admin/dashboard")
 });
 
@@ -31,9 +33,22 @@ router.post("/signup", async(req,res)=>{
 
 
 router.get("/dashboard", async (req, res) => {
-  const blogs = await Blog.find().sort({ createdAt: -1 });
-  res.render("dashboard", { blogs });
+    const page = parseInt(req.query.page) || 1;
+    const blogsOnPerPage = 5;
+
+    const blogs = await Blog.find()
+        .skip((page - 1) * blogsOnPerPage)
+        .limit(blogsOnPerPage)
+        .sort({ createdAt: -1 });
+
+    const totalBlogs = await Blog.countDocuments();
+    const totalPages = Math.ceil(totalBlogs / blogsOnPerPage);
+
+    const startSerial = (page - 1) * blogsOnPerPage + 1;
+
+    res.render("dashboard", { blogs, totalPages, page, startSerial });
 });
+
 
 router.get("/dashboard/:id",async(req, res)=>{
     const blog = await Blog.findById(req.params.id);
@@ -57,7 +72,8 @@ router.post("/dashboard/delete/:id",async(req, res)=>{
 });
 
 
-router.get("/admin/dashboard/add",(req,res)=>{
+router.get("/admin/dashboard/add",async(req,res)=>{
+
     res.render("add.ejs");
 })
 
@@ -72,7 +88,6 @@ router.post("/dashboard/add", async (req, res) => {
         res.redirect("/admin/dashboard");
     }
 });
-
 
 
 module.exports = router;
