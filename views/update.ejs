@@ -1,35 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Update blog</title>
   <%- include('partials/head.ejs') %>
 </head>
+
 <body>
-  <h1 class="mt-3 mx-4">Update blog</h1> 
+  <h1 class="mt-3 mx-4">Update blog</h1>
 
   <div class="container">
 
-    <form action="/admin/dashboard/update/<%= blog._id %>" method="post"> 
+    <form action="/admin/dashboard/update/<%= blog._id %>" method="post">
       <div class="mb-3">
         <label for="title" class="form-label">Title</label>
-        <input 
-          type="text" name="title" class="form-control" id="title" aria-describedby="title" value="<%= blog.title %>">
+        <input type="text" name="title" class="form-control" id="title" aria-describedby="title"
+          value="<%= blog.title %>">
       </div>
 
       <div class="mb-3">
         <label for="content" class="form-label">Content</label><br>
-        <textarea cols="50" rows="5" name="content" id="content"placeholder="Content Of Blog"><%= blog.content %></textarea>
+        <textarea cols="50" rows="5" name="content" id="content"
+          placeholder="Content Of Blog"><%= blog.content %></textarea>
       </div>
 
-      <div class="mb-3">   
+      <div class="mb-3">
         <label for="author" class="form-label">Author</label>
         <input type="text" class="form-control" name="author" id="author" value="<%= blog.author %>">
       </div>
-      <button><a href="/admin/dashboard">back</a></button>
+      <a href="/admin/dashboard" class="btn btn-secondary">Back</a>
+
       <button type="submit" class="btn btn-primary">Submit</button>
     </form>
   </div>
 </body>
+
 </html>
