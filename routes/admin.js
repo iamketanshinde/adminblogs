@@ -6,7 +6,10 @@ const Blog = require("../models/blog");
 router.get("/", (req, res) => {
     return res.render("signin");
 })
-
+router.get("/", async (req, res) => {
+    const blogs = await Blog.find().sort({ createdAt: -1 });
+    res.render("home", { blogs });
+});
 
 router.post("/", async (req, res) => {
     try {

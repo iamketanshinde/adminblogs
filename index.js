@@ -1,5 +1,6 @@
 const express = require('express');
 const path = require('path');
+const Blog = require("./models/blog")
 const adminroute = require("./routes/admin");
 
 const app = express();
@@ -20,6 +21,13 @@ app.get("/logout", (req, res) => {
     res.redirect("/admin");
 });
 
+app.get("/", async (req, res) => {
+
+    const blogs = await Blog.find().sort({ createdAt: -1 });
+
+    res.render("home", { blogs });
+
+});
 
 app.get("/", (req, res) => {
     res.render("home.ejs");
