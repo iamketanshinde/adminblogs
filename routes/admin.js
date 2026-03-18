@@ -3,6 +3,24 @@ const router = Router();
 const User = require("../models/admin")
 const Blog = require("../models/blog");
 
+
+const multer = require("multer");
+const path = require("path");
+
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, "public/uploads");
+    },
+    filename: function (req, file, cb) {
+        const uniqueName = Date.now() + path.extname(file.originalname);
+        cb(null, uniqueName);
+    }
+});
+
+const upload = multer({ storage });
+
+
+
 router.get("/", (req, res) => {
     return res.render("signin");
 })
@@ -59,12 +77,37 @@ router.get("/dashboard/add", async (req, res) => {
     res.render("add.ejs");
 })
 
-router.post("/dashboard/add", async (req, res) => {
-    const { title, content, author } = req.body;
-    await Blog.create({ title, content, author });
-    res.redirect("/admin/dashboard");
-});
+router.post("/dashboard/add", upload.single("profileImage"), async (req, res) => {
+    console.log("➡️ Request received");
 
+    try {
+        console.log("FILE:", req.file);
+        console.log("BODY:", req.body);
+
+        if (!req.file) {
+            return res.status(400).send("File not uploaded ❌");
+        }
+
+        const { title, content, author } = req.body;
+
+        const imagePath = `/uploads/${req.file.filename}`;
+
+        await Blog.create({
+            title,
+            content,
+            author,
+            image: imagePath
+        });
+
+        console.log("✅ Blog saved");
+
+        return res.redirect("/admin/dashboard");  // MUST return
+
+    } catch (err) {
+        console.error("❌ ERROR:", err);
+        return res.status(500).send(err.message);
+    }
+});
 router.get("/dashboard/:id", async (req, res) => {
     const blog = await Blog.findById(req.params.id);
     res.render("render.ejs", { blog });

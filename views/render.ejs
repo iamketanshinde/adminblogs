@@ -1,18 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title><%= blog.title %></title>
+  <title>
+    <%= blog.title %>
+  </title>
+
   <%- include('partials/head.ejs') %>
 </head>
+
 <body>
+
   <div class="container mt-4">
-    <h1><%= blog.title %></h1>
-    <p><strong>Content:</strong> <%= blog.content %></p>
-    <p><strong>Author:</strong> <%= blog.author %></p>
-    <hr>
-    <button><a href="/admin/dashboard">back</a></button>
+
+    <h1>
+      <%= blog.title %>
+    </h1>
+
+    <!-- ✅ IMAGE RENDER -->
+    <% if (blog.image) { %>
+      <div class="mb-3">
+        <img src="<%= blog.image %>" alt="Blog Image" style="width:100%; max-width:200px; border-radius:10px;">
+      </div>
+      <% } else { %>
+        <p>No Image Available</p>
+        <% } %>
+
+          <p><strong>Content:</strong></p>
+          <p>
+            <%= blog.content %>
+          </p>
+
+          <p><strong>Author:</strong>
+            <%= blog.author %>
+          </p>
+
+          <hr>
+
+          <a href="/admin/dashboard" class="btn btn-primary">Back</a>
+
   </div>
+
 </body>
+
 </html>

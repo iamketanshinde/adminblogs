@@ -1,19 +1,14 @@
 const { Schema, model } = require("mongoose");
 
 const blogSchema = new Schema({
-    title: {
-        type: String,
-        required: true,
-    },
-    content: {
-        type: String,
-        required: true,
-    },
-    author: {
-        type: String,
-        required: true,
-    },
+    title: String,
+    content: String,
+    author: String,
+
+    image: {
+        type: String, // file path
+    }
+
 }, { timestamps: true });
 
-const Blog = model("blog", blogSchema);
-module.exports = Blog;
+module.exports = model("blog", blogSchema);
