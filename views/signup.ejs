@@ -1,32 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>signupAdmin</title>
 </head>
-<body>
-    <%- include("./partials/head")  %>
 
-    <div class="container mt-4">
-        <form action="/admin/signup" method="POST">
-            <div class="mb-3">
-                <label for="exampleInputEmail1" class="form-label">fullname</label>
-                <input type="text" class="form-control" name="fullname" id="fullname" aria-describedby="fullname">
-            </div>
-            <div class="mb-3">
-                <label for="exampleInputEmail1" class="form-label">Email</label>
-                <input type="email" name="email" class="form-control" id="email" aria-describedby="emailHelp">
-            </div>
-            <div class="mb-3">
-                <label for="exampleInputPassword1" class="form-label">Password</label>
-                <input type="password" name="password" class="form-control" id="exampleInputPassword1">
-            </div>
-            <button><a href="/admin">back</a></button>
-            <button type="submit" class="btn btn-primary">Submit</button>
-        </form>
-    </div>
+<body>
+    <%- include("./partials/head") %>
+
+        <div class="container mt-4">
+            <form action="/signup" method="POST">
+                <input type="text" name="fullname" class="form-control mb-3" placeholder="Full Name">
+                <input type="email" name="email" class="form-control mb-3" placeholder="Email">
+                <input type="password" name="password" class="form-control mb-3" placeholder="Password">
+                <button class="btn btn-primary">Signup</button>
+            </form>
+        </div>
 
 
 </body>
+
 </html>

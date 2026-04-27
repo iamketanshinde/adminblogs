@@ -2,65 +2,44 @@ const { Schema, model } = require('mongoose');
 const { createHmac, randomBytes } = require("crypto");
 
 const adminSchema = new Schema({
-    fullname: {
-        type: String, required: true
-    },
-    email: {
-        type: String,
-        required: true,
-        unique: true
-    },
-    salt: {
-        type: String
-    },
-    password: {
-        type: String,
-        required: true
-    },
-    role: {
-        type: String,
-        enum: ["USER", "ADMIN"],
-        default: "USER"
-    }
-},
-    { timestamps: true }
-);
+    fullname: { type: String, required: true },
+    email: { type: String, required: true, unique: true },
+    salt: String,
+    password: { type: String, required: true },
+    role: { type: String, enum: ["USER", "ADMIN"], default: "USER" }
+}, { timestamps: true });
 
 adminSchema.pre("save", function (next) {
-    const admin = this;
-    if (!admin.isModified("password")) return next();
+    if (!this.isModified("password")) return next();
 
-    const salt = randomBytes(16).toString();
+    const salt = randomBytes(16).toString("hex");
+
     const hash = createHmac("sha256", salt)
-        .update(admin.password)
+        .update(this.password)
         .digest("hex");
 
-    admin.salt = salt;
-    admin.password = hash;
+    this.salt = salt;
+    this.password = hash;
 
     next();
-
-})
+});
 
 adminSchema.statics.matchedhash = async function (email, password) {
-    const admin = await this.findOne({ email });
-    if (!admin) throw new Error("User not found");
+    const user = await this.findOne({ email });
+    if (!user) throw new Error("User not found");
 
-    const salt = admin.salt;
-    const hash = admin.password;
-
-    const adminHashPass = createHmac("sha256", salt)
+    const hash = createHmac("sha256", user.salt)
         .update(password)
         .digest("hex");
 
-    if (hash !== adminHashPass) throw new Error("password is incorrect!")
+    if (hash !== user.password) throw new Error("Wrong password");
 
-    const adminObj = admin.toObject();
-    delete adminObj.password;
-    delete adminObj.salt;
-    return adminObj;
+    return {
+        _id: user._id,
+        fullname: user.fullname,
+        email: user.email,
+        role: user.role
+    };
 };
 
-const User = model('user', adminSchema);
-
-module.exports = User;
+module.exports = model("User", adminSchema);

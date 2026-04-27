@@ -1,134 +1,116 @@
-const Router = require('express');
-const router = Router();
-const User = require("../models/admin")
-const Blog = require("../models/blog");
+const express = require('express');
+const router = express.Router();
 
+const User = require("../models/admin");
+const Blog = require("../models/blog");
 
 const multer = require("multer");
 const path = require("path");
 
 const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, "public/uploads");
-    },
-    filename: function (req, file, cb) {
-        const uniqueName = Date.now() + path.extname(file.originalname);
-        cb(null, uniqueName);
-    }
+    destination: (req, file, cb) => cb(null, "public/uploads"),
+    filename: (req, file, cb) => cb(null, Date.now() + path.extname(file.originalname))
 });
 
 const upload = multer({ storage });
 
-
+function isAdmin(req, res, next) {
+    if (!req.session.user || req.session.user.role !== "ADMIN") {
+        return res.redirect("/");
+    }
+    next();
+}
 
 router.get("/", (req, res) => {
-    return res.render("signin");
-})
-router.get("/", async (req, res) => {
-    const blogs = await Blog.find().sort({ createdAt: -1 });
-    res.render("home", { blogs });
+    res.render("signin");
 });
 
 router.post("/", async (req, res) => {
     try {
         const { email, password } = req.body;
+
         const user = await User.matchedhash(email, password);
-        res.redirect("/admin/dashboard");
-    } catch (error) {
-        res.status(401).send(error.message);
+
+        req.session.user = user;
+
+        if (user.role !== "ADMIN") return res.send("Not Admin ❌");
+
+        return res.redirect("/admin/dashboard");
+    } catch {
+        return res.send("Admin Login Failed ❌");
     }
 });
 
+// SIGNUP ADMIN (ONE TIME ONLY)
+router.get("/signup", async (req, res) => {
+    const admin = await User.findOne({ role: "ADMIN" });
+    if (admin) return res.send("Admin already exists ❌");
 
-router.get("/signup", (req, res) => {
-    return res.render("signup");
+    res.render("signup");
 });
 
 router.post("/signup", async (req, res) => {
+    const admin = await User.findOne({ role: "ADMIN" });
+    if (admin) return res.send("Admin already exists ❌");
+
     const { fullname, email, password } = req.body;
-    try {
-        await User.create({ fullname, email, password, role: "ADMIN" });
-        console.log(User)
-    } catch (err) {
-        return res.status(500).send("Error during signup");
-    }
-    return res.redirect("/admin");
-})
 
+    await User.create({ fullname, email, password, role: "ADMIN" });
 
-router.get("/dashboard", async (req, res) => {
-    const page = parseInt(req.query.page) || 1;
-    const blogsOnPerPage = 5;
-
-    const blogs = await Blog.find()
-        .skip((page - 1) * blogsOnPerPage)
-        .limit(blogsOnPerPage)
-        .sort({ createdAt: -1 });
-
-    const totalBlogs = await Blog.countDocuments();
-    const totalPages = Math.ceil(totalBlogs / blogsOnPerPage);
-
-    const startSerial = (page - 1) * blogsOnPerPage + 1;
-
-    res.render("dashboard", { blogs, totalPages, page, startSerial });
+    res.redirect("/admin");
 });
 
-router.get("/dashboard/add", async (req, res) => {
-    res.render("add.ejs");
-})
-
-router.post("/dashboard/add", upload.single("profileImage"), async (req, res) => {
-    console.log("➡️ Request received");
-
-    try {
-        console.log("FILE:", req.file);
-        console.log("BODY:", req.body);
-
-        if (!req.file) {
-            return res.status(400).send("File not uploaded ❌");
-        }
-
-        const { title, content, author } = req.body;
-
-        const imagePath = `/uploads/${req.file.filename}`;
-
-        await Blog.create({
-            title,
-            content,
-            author,
-            image: imagePath
-        });
-
-        console.log("✅ Blog saved");
-
-        return res.redirect("/admin/dashboard");  // MUST return
-
-    } catch (err) {
-        console.error("❌ ERROR:", err);
-        return res.status(500).send(err.message);
-    }
+// DASHBOARD
+router.get("/dashboard", isAdmin, async (req, res) => {
+    const blogs = await Blog.find().sort({ createdAt: -1 });
+    res.render("dashboard", { blogs, page: 1 });
 });
-router.get("/dashboard/:id", async (req, res) => {
+
+// ADD BLOG
+router.get("/dashboard/add", isAdmin, (req, res) => {
+    res.render("add");
+});
+
+router.post("/dashboard/add", isAdmin, upload.single("profileImage"), async (req, res) => {
+    const { title, content, author } = req.body;
+    const image = req.file ? `/uploads/${req.file.filename}` : "";
+
+    await Blog.create({ title, content, author, image });
+
+    res.redirect("/admin/dashboard");
+});
+
+// VIEW
+router.get("/dashboard/:id", isAdmin, async (req, res) => {
     const blog = await Blog.findById(req.params.id);
-    res.render("render.ejs", { blog });
+    res.render("render", { blog });
 });
-router.get("/dashboard/update/:id", async (req, res) => {
+
+// UPDATE PAGE
+router.get("/dashboard/update/:id", isAdmin, async (req, res) => {
     const blog = await Blog.findById(req.params.id);
     res.render("update", { blog });
 });
 
-
-router.post("/dashboard/update/:id", async (req, res) => {
+// UPDATE POST
+router.post("/dashboard/update/:id", isAdmin, upload.single("profileImage"), async (req, res) => {
     const { title, content, author } = req.body;
-    await Blog.findByIdAndUpdate(req.params.id, { title, content, author })
+
+    const updateData = { title, content, author };
+
+    if (req.file) {
+        updateData.image = `/uploads/${req.file.filename}`;
+    }
+
+    await Blog.findByIdAndUpdate(req.params.id, updateData);
+
     res.redirect("/admin/dashboard");
 });
 
-router.post("/dashboard/delete/:id", async (req, res) => {
-    await Blog.findByIdAndDelete(req.params.id)
+// DELETE
+router.post("/dashboard/delete/:id", isAdmin, async (req, res) => {
+    await Blog.findByIdAndDelete(req.params.id);
     res.redirect("/admin/dashboard");
 });
-
-
 
 module.exports = router;

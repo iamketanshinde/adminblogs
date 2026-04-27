@@ -4,11 +4,7 @@ const blogSchema = new Schema({
     title: String,
     content: String,
     author: String,
-
-    image: {
-        type: String, // file path
-    }
-
+    image: String
 }, { timestamps: true });
 
 module.exports = model("blog", blogSchema);
